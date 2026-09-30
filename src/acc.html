@@ -15,6 +15,12 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+    .app-modal {
+      display: none;
+    }
+    .app-modal.app-modal-open {
+      display: flex;
+    }
   </style>
 </head>
 <body class="bg-[#F6FBF9] text-reen-dark font-sans h-screen flex overflow-hidden">
@@ -39,7 +45,7 @@
           <i data-lucide="arrow-left-right" class="w-5 h-5"></i>
           <span>Transactions</span>
         </a>
-        <a href="#" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
+        <a href="profile.html" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
           <i data-lucide="user" class="w-5 h-5"></i>
           <span>Profile</span>
         </a>
@@ -66,6 +72,7 @@
       <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-6 w-full lg:w-auto justify-between lg:justify-end">
         <div class="flex flex-col items-start sm:items-end mr-0 sm:mr-6 lg:mr-12">
           <span id="dashboard-user-name" class="text-reen-green text-sm font-medium"></span>
+          <span id="dashboard-user-verification" class="hidden text-xs font-semibold text-reen-green">Verified</span>
           <span id="dashboard-account-number" class="font-bold text-lg"></span>
         </div>
         <div class="flex items-center gap-4 sm:gap-6 w-full sm:w-auto justify-between sm:justify-start">
@@ -77,7 +84,9 @@
             <i data-lucide="bell" class="w-6 h-6"></i>
             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-[#F6FBF9]"></span>
           </button>
-          <img src="https://i.pravatar.cc/150?u=maureen" alt="Profile" class="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0">
+          <a href="profile.html" aria-label="Open profile" class="rounded-full shrink-0 focus:outline-none focus:ring-2 focus:ring-reen-green focus:ring-offset-2">
+            <img data-profile-avatar src="https://i.pravatar.cc/150?u=maureen" alt="Profile photo" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+          </a>
         </div>
       </div>
     </header>
@@ -85,12 +94,13 @@
     <div class="flex flex-col gap-10 max-w-7xl">
       <!-- Account Cards Row -->
       <section>
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div id="account-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 <!-- Main Account -->
 <!-- Main Account -->
 <div
   class="bg-reen-light rounded-2xl p-6 shadow-sm border-l-4 border-reen-purple flex flex-col justify-between h-48"
   data-account="main"
+  data-account-id="1"
 >
   <div class="flex justify-between items-start">
     <div>
@@ -98,7 +108,7 @@
 
       <p
         id="main-balance"
-        class="text-2xl font-bold text-gray-900"
+        class="account-balance text-2xl font-bold text-gray-900"
       >
         ₦ 44,500.00
       </p>
@@ -106,7 +116,9 @@
 
     <button
       id="main-eye"
+      data-action="toggle-balance"
       type="button"
+      aria-label="Hide balance"
       class="text-gray-500 hover:text-gray-700"
     >
       <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -116,6 +128,8 @@
   <div class="flex gap-3 mt-4">
     <button
       type="button"
+      data-action="fund"
+      data-account-id="1"
       class="flex-1 bg-reen-green text-white text-sm font-medium py-2 rounded-lg hover:bg-green-600 transition-colors"
     >
       Fund
@@ -123,8 +137,9 @@
 
     <button
       type="button"
-      class="withdraw-btn flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
-      data-account="main"
+      class="flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
+      data-action="withdraw"
+      data-account-id="1"
     >
       Withdraw
     </button>
@@ -135,6 +150,7 @@
 <div
   class="bg-reen-light rounded-2xl p-6 shadow-sm flex flex-col justify-between h-48"
   data-account="school"
+  data-account-id="2"
 >
   <div class="flex justify-between items-start">
     <div>
@@ -144,7 +160,7 @@
 
       <p
         id="school-balance"
-        class="text-2xl font-bold text-gray-900"
+        class="account-balance text-2xl font-bold text-gray-900"
       >
         ₦ 44,500.00
       </p>
@@ -152,7 +168,9 @@
 
     <button
       id="school-eye"
+      data-action="toggle-balance"
       type="button"
+      aria-label="Hide balance"
       class="text-gray-500 hover:text-gray-700"
     >
       <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -162,6 +180,8 @@
   <div class="flex gap-3 mt-4">
     <button
       type="button"
+      data-action="fund"
+      data-account-id="2"
       class="flex-1 bg-reen-green text-white text-sm font-medium py-2 rounded-lg hover:bg-green-600 transition-colors"
     >
       Fund
@@ -169,8 +189,9 @@
 
     <button
       type="button"
-      class="withdraw-btn flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
-      data-account="school"
+      class="flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
+      data-action="withdraw"
+      data-account-id="2"
     >
       Withdraw
     </button>
@@ -181,6 +202,7 @@
 <div
   class="bg-reen-light rounded-2xl p-6 shadow-sm flex flex-col justify-between h-48"
   data-account="holiday"
+  data-account-id="3"
 >
   <div class="flex justify-between items-start">
     <div>
@@ -190,7 +212,7 @@
 
       <p
         id="holiday-balance"
-        class="text-2xl font-bold text-gray-900"
+        class="account-balance text-2xl font-bold text-gray-900"
       >
         ₦ 44,500.00
       </p>
@@ -198,7 +220,9 @@
 
     <button
       id="holiday-eye"
+      data-action="toggle-balance"
       type="button"
+      aria-label="Hide balance"
       class="text-gray-500 hover:text-gray-700"
     >
       <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -208,6 +232,8 @@
   <div class="flex gap-3 mt-4">
     <button
       type="button"
+      data-action="fund"
+      data-account-id="3"
       class="flex-1 bg-reen-green text-white text-sm font-medium py-2 rounded-lg hover:bg-green-600 transition-colors"
     >
       Fund
@@ -215,21 +241,22 @@
 
     <button
       type="button"
-      class="withdraw-btn flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
-      data-account="holiday"
+      class="flex-1 bg-[#D1EBE1] text-gray-600 text-sm font-medium py-2 rounded-lg hover:bg-gray-200 transition-colors"
+      data-action="withdraw"
+      data-account-id="3"
     >
       Withdraw
     </button>
   </div>
 </div>
           <!-- Add Account -->
-          <div class="bg-[#F8F9FA] rounded-2xl p-6 shadow-sm flex flex-col justify-center h-48 border border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
-            <div class="flex items-center justify-center gap-2 mb-4 text-gray-600">
+          <button id="add-account-button" type="button" class="w-full bg-[#F8F9FA] rounded-2xl p-6 shadow-sm flex flex-col justify-center h-48 border border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors">
+            <span class="flex items-center justify-center gap-2 mb-4 text-gray-600">
               <i data-lucide="plus" class="w-5 h-5"></i>
               <span class="font-medium">Add Account</span>
-            </div>
-            <p class="text-2xl font-bold text-gray-400 text-center">₦ 00,000.00</p>
-          </div>
+            </span>
+            <span class="text-2xl font-bold text-gray-400 text-center">₦ 00,000.00</span>
+          </button>
         </div>
       </section>
       <!-- Transactions List -->
@@ -388,6 +415,73 @@
     </div>
   </main>
 
+  <div id="account-action-modal" class="app-modal fixed inset-0 z-50 items-center justify-center bg-black/40 px-6" role="dialog" aria-modal="true" aria-labelledby="account-action-title">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-7 shadow-xl">
+      <h2 id="account-action-title" class="text-xl font-semibold text-reen-dark">Fund account</h2>
+      <p id="account-action-name" class="mt-2 text-sm text-gray-500"></p>
+      <form id="account-action-form" class="mt-6">
+        <label for="account-action-amount" class="block text-sm font-medium text-gray-700">Amount</label>
+        <div class="mt-2 flex items-center rounded-lg border border-gray-200 px-3 focus-within:ring-2 focus-within:ring-reen-light">
+          <span class="text-gray-500">₦</span>
+          <input id="account-action-amount" name="amount" type="number" min="0.01" step="0.01" required class="w-full border-0 px-2 py-3 outline-none focus:ring-0" inputmode="decimal">
+        </div>
+        <label id="account-action-bank-label" for="account-action-bank" class="mt-4 block text-sm font-medium text-gray-700">Bank</label>
+        <input id="account-action-bank" name="bank" type="text" list="nigerian-banks" autocomplete="organization" required class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light" placeholder="Choose or type a bank">
+        <datalist id="nigerian-banks">
+          <option value="Access Bank"></option>
+          <option value="Citibank Nigeria"></option>
+          <option value="Ecobank Nigeria"></option>
+          <option value="Fidelity Bank"></option>
+          <option value="First Bank of Nigeria"></option>
+          <option value="First City Monument Bank (FCMB)"></option>
+          <option value="Globus Bank"></option>
+          <option value="Guaranty Trust Bank (GTBank)"></option>
+          <option value="Jaiz Bank"></option>
+          <option value="Keystone Bank"></option>
+          <option value="Kuda Bank"></option>
+          <option value="Lotus Bank"></option>
+          <option value="Moniepoint Microfinance Bank"></option>
+          <option value="OPay"></option>
+          <option value="PalmPay"></option>
+          <option value="Parallex Bank"></option>
+          <option value="Polaris Bank"></option>
+          <option value="PremiumTrust Bank"></option>
+          <option value="Providus Bank"></option>
+          <option value="Stanbic IBTC Bank"></option>
+          <option value="Standard Chartered Bank Nigeria"></option>
+          <option value="Sterling Bank"></option>
+          <option value="SunTrust Bank"></option>
+          <option value="TAJBank"></option>
+          <option value="Union Bank of Nigeria"></option>
+          <option value="United Bank for Africa (UBA)"></option>
+          <option value="Unity Bank"></option>
+          <option value="Wema Bank"></option>
+          <option value="Zenith Bank"></option>
+        </datalist>
+        <p id="account-action-error" class="mt-2 min-h-5 text-sm text-red-600" role="alert"></p>
+        <div class="mt-5 flex gap-3">
+          <button id="cancel-account-action" type="button" class="flex-1 rounded-lg border border-gray-200 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50">Cancel</button>
+          <button id="submit-account-action" type="submit" class="flex-1 rounded-lg bg-reen-green py-3 text-sm font-semibold text-white hover:bg-green-600">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="add-account-modal" class="app-modal fixed inset-0 z-50 items-center justify-center bg-black/40 px-6" role="dialog" aria-modal="true" aria-labelledby="add-account-title">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-7 shadow-xl">
+      <h2 id="add-account-title" class="text-xl font-semibold text-reen-dark">Add account</h2>
+      <form id="add-account-form" class="mt-6">
+        <label for="new-account-name" class="block text-sm font-medium text-gray-700">Account name</label>
+        <input id="new-account-name" name="name" type="text" maxlength="40" required class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light">
+        <p id="add-account-error" class="mt-2 min-h-5 text-sm text-red-600" role="alert"></p>
+        <div class="mt-5 flex gap-3">
+          <button id="cancel-add-account" type="button" class="flex-1 rounded-lg border border-gray-200 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50">Cancel</button>
+          <button type="submit" class="flex-1 rounded-lg bg-reen-green py-3 text-sm font-semibold text-white hover:bg-green-600">Create account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Logout Confirmation Modal -->
 <div
   id="logout-modal"
@@ -437,6 +531,7 @@
   <script>
     lucide.createIcons();
   </script>
+  <script src="data.js"></script>
   <script src="dashboard.js"></script>
   <script src="acc.js"></script>
   <script src="auth.js"></script>

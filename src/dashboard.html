@@ -39,17 +39,6 @@
       </a>
       <!-- Navigation -->
       <nav class="flex flex-col space-y-6 items-start shrink-0">
-        <!-- Overview -->
-        <a
-          href="dashboard.html"
-          class="flex items-center gap-4 text-gray-500 hover:text-reen-dark transition-colors font-semibold whitespace-nowrap"
-        >
-          <i
-            data-lucide="layout-grid"
-            class="w-5 h-5"
-          ></i>
-          <span>Overview</span>
-        </a>
         <!-- Accounts -->
         <a
           href="acc.html"
@@ -60,6 +49,17 @@
             class="w-5 h-5"
           ></i>
           <span>Accounts</span>
+        </a>
+        <!-- Overview -->
+        <a
+          href="dashboard.html"
+          class="flex items-center gap-4 text-gray-500 hover:text-reen-dark transition-colors font-semibold whitespace-nowrap"
+        >
+          <i
+            data-lucide="layout-grid"
+            class="w-5 h-5"
+          ></i>
+          <span>Overview</span>
         </a>
         <!-- Transactions -->
         <a
@@ -74,7 +74,7 @@
         </a>
         <!-- Profile -->
         <a
-          href="#"
+          href="profile.html"
           class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap"
         >
           <i
@@ -143,6 +143,7 @@
             id="dashboard-user-name"
             class="text-reen-green text-sm font-medium"
           ></span>
+          <span id="dashboard-user-verification" class="hidden text-xs font-semibold text-reen-green">Verified</span>
           <span
             id="dashboard-account-number"
             class="font-bold text-lg"
@@ -159,30 +160,51 @@
               class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2"
             ></i>
             <input
+              id="dashboard-search"
               type="text"
               placeholder="Search"
+              aria-label="Search accounts and transactions"
               class="pl-10 pr-4 py-2 rounded-full bg-white border-none outline-none shadow-sm text-sm w-full sm:w-64 focus:ring-2 focus:ring-reen-light"
             >
           </div>
           <!-- Notification -->
-          <button
-            type="button"
-            class="relative text-gray-500 hover:text-reen-dark shrink-0"
-          >
-            <i
-              data-lucide="bell"
-              class="w-6 h-6"
-            ></i>
-            <span
-              class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-[#F6FBF9]"
-            ></span>
-          </button>
+          <div class="relative shrink-0">
+            <button
+              id="notification-button"
+              type="button"
+              aria-label="Open notifications"
+              aria-expanded="false"
+              aria-controls="notification-panel"
+              class="relative text-gray-500 hover:text-reen-dark"
+            >
+              <i
+                data-lucide="bell"
+                class="w-6 h-6"
+              ></i>
+              <span
+                id="notification-indicator"
+                class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-[#F6FBF9]"
+              ></span>
+            </button>
+            <div
+              id="notification-panel"
+              role="region"
+              aria-label="Recent notifications"
+              class="hidden absolute right-0 top-full z-40 mt-3 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-gray-100 bg-white p-4 shadow-lg"
+            >
+              <h3 class="mb-3 text-sm font-semibold text-gray-900">Recent activity</h3>
+              <div id="notification-list" class="max-h-80 space-y-1 overflow-y-auto"></div>
+            </div>
+          </div>
           <!-- Profile -->
-          <img
-            src="https://i.pravatar.cc/150?u=maureen"
-            alt="Profile"
-            class="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0"
-          >
+          <a href="profile.html" aria-label="Open profile" class="rounded-full shrink-0 focus:outline-none focus:ring-2 focus:ring-reen-green focus:ring-offset-2">
+            <img
+              data-profile-avatar
+              src="https://i.pravatar.cc/150?u=maureen"
+              alt="Profile photo"
+              class="w-10 h-10 rounded-full object-cover border border-gray-200"
+            >
+          </a>
         </div>
       </div>
     </header>
@@ -331,6 +353,7 @@
             id="accounts-container"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
           ></div>
+          <p id="accounts-empty-state" class="hidden mt-3 text-sm text-gray-500">No matching accounts.</p>
         </section>
         <!-- ================================================= -->
         <!-- STATISTICS -->
@@ -472,6 +495,7 @@
             id="transactions-container"
             class="space-y-4 md:space-y-5"
           ></div>
+          <p id="transactions-empty-state" class="hidden text-sm text-gray-500">No matching transactions.</p>
         </section>
         <!-- ================================================= -->
         <!-- UPGRADE CARD -->

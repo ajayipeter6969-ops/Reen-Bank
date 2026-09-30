@@ -1,6 +1,8 @@
 // LOCAL STORAGE KEY
 const USER_KEY = "reenUser";
 const LOGIN_KEY = "reenLoggedIn";
+const ACCOUNTS_KEY = "reenAccounts";
+const TRANSACTIONS_KEY = "reenTransactions";
 // GET ELEMENTS
 const registerForm = document.getElementById("register-form");
 const otpForm = document.getElementById("otp-form");
@@ -10,6 +12,37 @@ const otpEmail = document.getElementById("otp-email");
 const otpInputs = document.querySelectorAll(".otp-input");
 const togglePassword = document.getElementById("toggle-password");
 const passwordInput = document.getElementById("password");
+const resendOtpButton = document.getElementById("resend-otp");
+const otpCountdown = document.getElementById("otp-countdown");
+const OTP_RESEND_SECONDS = 45;
+let otpCountdownInterval = null;
+
+function startOtpCountdown() {
+  clearInterval(otpCountdownInterval);
+  const resendAt = Date.now() + OTP_RESEND_SECONDS * 1000;
+  resendOtpButton.disabled = true;
+  resendOtpButton.classList.add("opacity-50", "cursor-not-allowed");
+
+  function updateCountdown() {
+    const secondsRemaining = Math.max(
+      0,
+      Math.ceil((resendAt - Date.now()) / 1000)
+    );
+    otpCountdown.textContent = secondsRemaining
+      ? `You can resend in 00:${String(secondsRemaining).padStart(2, "0")}`
+      : "You can request another code now.";
+
+    if (secondsRemaining === 0) {
+      clearInterval(otpCountdownInterval);
+      otpCountdownInterval = null;
+      resendOtpButton.disabled = false;
+      resendOtpButton.classList.remove("opacity-50", "cursor-not-allowed");
+    }
+  }
+
+  updateCountdown();
+  otpCountdownInterval = setInterval(updateCountdown, 1000);
+}
 // GENERATE RANDOM 6 DIGIT OTP
 
 function generateAccountNumber() {
@@ -44,6 +77,8 @@ const existingUser = JSON.parse(localStorage.getItem(USER_KEY));
     // User has not verified email yet
     verified: false
   };
+  localStorage.removeItem(ACCOUNTS_KEY);
+  localStorage.removeItem(TRANSACTIONS_KEY);
   // Save user to localStorage
   localStorage.setItem(
     USER_KEY,
@@ -55,6 +90,7 @@ const existingUser = JSON.parse(localStorage.getItem(USER_KEY));
   registerScreen.classList.add("hidden");
   // Show OTP
   otpScreen.classList.remove("hidden");
+  startOtpCountdown();
   // Put cursor in first OTP box
   otpInputs[0].focus();
  
@@ -128,9 +164,7 @@ otpForm.addEventListener("submit", function (event) {
 });
 
 // RESEND OTP
-document.getElementById("resend-otp").addEventListener("click", function () {
-    alert("A new OTP has been generated.");
-  });
+resendOtpButton.addEventListener("click", startOtpCountdown);
 
 // SHOW / HIDE PASSWORD
 togglePassword.addEventListener(

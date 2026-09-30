@@ -41,7 +41,7 @@
           <i data-lucide="arrow-left-right" class="w-5 h-5"></i>
           <span>Transactions</span>
         </a>
-        <a href="#" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
+        <a href="profile.html" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
           <i data-lucide="user" class="w-5 h-5"></i>
           <span>Profile</span>
         </a>
@@ -73,6 +73,7 @@
       <div class="flex flex-col-reverse sm:flex-row items-start sm:items-center gap-6 w-full lg:w-auto justify-between lg:justify-end">
         <div class="flex flex-col items-start sm:items-end mr-0 sm:mr-6 lg:mr-12">
           <span id="dashboard-user-name" class="text-reen-green text-sm font-medium"></span>
+          <span id="dashboard-user-verification" class="hidden text-xs font-semibold text-reen-green">Verified</span>
           <span id="dashboard-account-number" class="font-bold text-lg"></span>
         </div>
         
@@ -85,7 +86,9 @@
             <i data-lucide="bell" class="w-6 h-6"></i>
             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-[#F6FBF9]"></span>
           </button>
-          <img src="https://i.pravatar.cc/150?u=maureen" alt="Profile" class="w-10 h-10 rounded-full object-cover border border-gray-200 shrink-0">
+          <a href="profile.html" aria-label="Open profile" class="rounded-full shrink-0 focus:outline-none focus:ring-2 focus:ring-reen-green focus:ring-offset-2">
+            <img data-profile-avatar src="https://i.pravatar.cc/150?u=maureen" alt="Profile photo" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+          </a>
         </div>
       </div>
     </header>
@@ -102,7 +105,7 @@
             <div class="flex justify-between items-start">
               <div>
                 <p class="text-reen-purple text-sm font-medium mb-1">Main Account</p>
-                <p id="main-balance" class="text-2xl font-bold text-gray-900">₦ 44,500.00</p>
+                <p id="main-balance" class="text-2xl font-bold text-gray-900">₦0.00</p>
               </div>
               <button id="main-eye" class="cursor-pointer text-gray-400 hover:text-gray-700">
                 <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -115,7 +118,7 @@
             <div class="flex justify-between items-start">
               <div>
                 <p class="text-reen-purple text-sm font-medium mb-1">School Savings</p>
-                <p id="school-balance" class="text-2xl font-bold text-gray-900">₦ 44,500.00</p>
+                <p id="school-balance" class="text-2xl font-bold text-gray-900">₦0.00</p>
               </div>
               <button id="school-eye" class="cursor-pointer text-gray-400 hover:text-gray-700">
                 <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -128,7 +131,7 @@
             <div class="flex justify-between items-start">
               <div>
                 <p class="text-reen-purple text-sm font-medium mb-1">Holiday Plan</p>
-                <p id="holiday-balance" class=" text-2xl font-bold text-gray-900">₦ 44,500.00</p>
+                <p id="holiday-balance" class=" text-2xl font-bold text-gray-900">₦0.00</p>
               </div>
               <button id="holiday-eye" class="cursor-pointer text-gray-400 hover:text-gray-700">
                 <i data-lucide="eye-off" class="w-4 h-4"></i>
@@ -365,8 +368,9 @@
   <script>
     lucide.createIcons();
   </script>
+  <script src="data.js"></script>
   <script src="dashboard.js"></script>
-  <script src="acc.js"></script>
+  <script src="transaction.js"></script>
   <script src="auth.js"></script>
   <script src="logout.js"></script>
 </body>

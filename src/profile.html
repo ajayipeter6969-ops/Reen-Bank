@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reen Bank - Profile</title>
+  <link href="./output.css" rel="stylesheet">
+  <link rel="shortcut icon" href="assets/image 32.png" type="image/x-icon">
+</head>
+<body class="bg-[#F6FBF9] text-reen-dark font-sans h-screen flex overflow-hidden">
+  <div id="sidebar-backdrop" class="hidden fixed inset-0 z-40 bg-black/30 md:hidden"></div>
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-[#F6FBF9] flex flex-col justify-between py-8 px-6 border-r border-gray-100 h-full transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out shrink-0">
+    <div class="flex flex-col items-stretch w-full">
+      <a href="index.html" class="flex items-center gap-2 mb-12 shrink-0">
+        <img src="assets/logo.png" alt="Reen Bank" class="w-32 md:w-36">
+      </a>
+      <nav class="flex flex-col space-y-6 items-start shrink-0">
+        <a href="dashboard.html" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
+          <i data-lucide="layout-grid" class="w-5 h-5"></i><span>Overview</span>
+        </a>
+        <a href="acc.html" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
+          <i data-lucide="credit-card" class="w-5 h-5"></i><span>Accounts</span>
+        </a>
+        <a href="transaction.html" class="flex items-center gap-4 font-semibold text-gray-500 hover:text-reen-dark transition-colors whitespace-nowrap">
+          <i data-lucide="arrow-left-right" class="w-5 h-5"></i><span>Transactions</span>
+        </a>
+        <a href="profile.html" aria-current="page" class="flex items-center gap-4 font-semibold text-reen-green whitespace-nowrap">
+          <i data-lucide="user-round" class="w-5 h-5"></i><span>Profile</span>
+        </a>
+      </nav>
+    </div>
+    <a href="#" id="logout-btn" class="flex items-center gap-4 text-gray-500 hover:text-reen-dark transition-colors shrink-0 mt-auto">
+      <i data-lucide="arrow-left" class="w-5 h-5"></i><span>Logout</span>
+    </a>
+  </aside>
+
+  <main class="flex-1 flex flex-col py-6 md:py-8 px-4 sm:px-6 md:px-10 overflow-y-auto w-full">
+    <header class="flex justify-between items-center mb-8 md:mb-10 gap-4">
+      <div class="flex items-center gap-4">
+        <button id="mobile-menu-btn" type="button" aria-label="Open navigation" class="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Profile</h1>
+      </div>
+      <div class="flex items-center gap-3 sm:gap-5">
+        <div class="hidden sm:flex flex-col items-end">
+          <span id="profile-header-name" class="text-reen-green text-sm font-medium"></span>
+          <span id="profile-header-verification" class="hidden text-xs font-semibold text-reen-green">Verified</span>
+          <span id="profile-header-account" class="font-bold"></span>
+        </div>
+        <a href="profile.html" aria-label="Open profile" class="rounded-full focus:outline-none focus:ring-2 focus:ring-reen-green focus:ring-offset-2">
+          <img data-profile-avatar src="https://i.pravatar.cc/150?u=maureen" alt="Profile photo" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+        </a>
+      </div>
+    </header>
+
+    <section class="w-full max-w-3xl">
+      <form id="profile-form" class="rounded-2xl bg-white p-5 sm:p-8 shadow-sm">
+        <div class="flex items-center gap-4 border-b border-gray-100 pb-6">
+          <div class="flex shrink-0 flex-col items-center gap-2">
+            <img data-profile-avatar src="https://i.pravatar.cc/150?u=maureen" alt="Profile photo" class="w-16 h-16 rounded-full object-cover border border-gray-200">
+            <button id="change-profile-photo" type="button" class="text-xs font-semibold text-reen-green hover:underline">Change photo</button>
+            <input id="profile-photo-input" type="file" accept="image/*" class="sr-only" tabindex="-1" aria-label="Choose a profile photo">
+          </div>
+          <div class="min-w-0">
+            <h2 id="profile-display-name" class="text-lg font-bold text-gray-900 break-words">Your profile</h2>
+            <p id="profile-display-email" class="mt-1 text-sm text-gray-500 break-all"></p>
+            <span id="profile-verification" class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-gray-500" role="status">
+              <span aria-hidden="true">&#10003;</span>
+              <span id="profile-verification-text">Not verified</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-6">
+          <div class="sm:col-span-2">
+            <label for="profile-name" class="block text-sm font-medium text-gray-700">Full name</label>
+            <input id="profile-name" name="name" type="text" autocomplete="name" required maxlength="80" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 text-gray-900 outline-none focus:border-reen-green focus:ring-2 focus:ring-reen-green/10">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="profile-email" class="block text-sm font-medium text-gray-700">Email address</label>
+            <input id="profile-email" name="email" type="email" autocomplete="email" required maxlength="120" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 text-gray-900 outline-none focus:border-reen-green focus:ring-2 focus:ring-reen-green/10">
+          </div>
+          <div class="sm:col-span-2">
+            <label for="profile-account-number" class="block text-sm font-medium text-gray-700">Account number</label>
+            <input id="profile-account-number" type="text" readonly class="mt-2 w-full rounded-lg border border-gray-100 bg-gray-50 px-3 py-3 text-gray-500">
+          </div>
+        </div>
+
+        <div class="mt-8 border-t border-gray-100 pt-6">
+          <h3 class="font-semibold text-gray-900">Change password</h3>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="new-password" class="block text-sm font-medium text-gray-700">New password <span class="font-normal text-gray-400">(optional)</span></label>
+              <input id="new-password" name="newPassword" type="password" autocomplete="new-password" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 text-gray-900 outline-none focus:border-reen-green focus:ring-2 focus:ring-reen-green/10">
+            </div>
+            <div>
+              <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm new password</label>
+              <input id="confirm-password" name="confirmPassword" type="password" autocomplete="new-password" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 text-gray-900 outline-none focus:border-reen-green focus:ring-2 focus:ring-reen-green/10">
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-7 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+          <p id="profile-status" class="min-h-5 text-sm text-reen-green" role="status" aria-live="polite"></p>
+          <button type="submit" class="rounded-lg bg-reen-green px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-green-600">Save changes</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div id="logout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-7 text-center shadow-xl">
+      <h2 class="text-xl font-semibold text-reen-dark">Logout</h2>
+      <p class="mt-3 text-sm leading-6 text-gray-500">Are you sure you want to logout from your account?</p>
+      <div class="mt-7 flex gap-3">
+        <button id="cancel-logout" type="button" class="flex-1 rounded-lg border border-gray-200 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50">Cancel</button>
+        <button id="confirm-logout" type="button" class="flex-1 rounded-lg bg-reen-green py-3 text-sm font-semibold text-white hover:bg-red-600">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="profile.js"></script>
+  <script src="auth.js"></script>
+  <script src="logout.js"></script>
+</body>
+</html>

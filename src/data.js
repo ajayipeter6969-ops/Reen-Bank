@@ -21,19 +21,19 @@ const defaultAccounts = [
   {
     id: 1,
     name: "Main Account",
-    balance: 44500,
+    balance: 0,
     type: "main"
   },
   {
     id: 2,
     name: "School Savings",
-    balance: 44500,
+    balance: 0,
     type: "savings"
   },
   {
     id: 3,
     name: "Holiday Plan",
-    balance: 44500,
+    balance: 0,
     type: "savings"
   }
 ];
@@ -43,50 +43,7 @@ const defaultAccounts = [
 // DEFAULT TRANSACTIONS
 // ========================================
 
-const defaultTransactions = [
-  {
-    id: 1,
-    name: "Oluwaben Jamin",
-    amount: -10000,
-    date: "06.Mar.2023",
-    time: "09:39"
-  },
-  {
-    id: 2,
-    name: "Oluwaben Jamin",
-    amount: 10000,
-    date: "06.Mar.2023",
-    time: "09:39"
-  },
-  {
-    id: 3,
-    name: "School Payment",
-    amount: -5000,
-    date: "05.Mar.2023",
-    time: "14:25"
-  },
-  {
-    id: 4,
-    name: "Salary",
-    amount: 50000,
-    date: "01.Mar.2023",
-    time: "08:15"
-  },
-  {
-    id: 5,
-    name: "Oluwaben Jamin",
-    amount: 10000,
-    date: "28.Feb.2023",
-    time: "11:42"
-  },
-  {
-    id: 6,
-    name: "Electricity Bill",
-    amount: -8500,
-    date: "25.Feb.2023",
-    time: "16:30"
-  }
-];
+const defaultTransactions = [];
 
 
 // ========================================
@@ -282,6 +239,7 @@ function addTransaction(transactionData) {
     id: Date.now(),
     name: transactionData.name,
     amount: Number(transactionData.amount),
+    bank: transactionData.bank || "",
     date: transactionData.date,
     time: transactionData.time
   };

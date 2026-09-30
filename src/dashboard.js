@@ -22,6 +22,8 @@ const userName =
 
 const accountNumber =
   document.getElementById("dashboard-account-number");
+const userVerification =
+  document.getElementById("dashboard-user-verification");
 
 
 if (user) {
@@ -34,6 +36,14 @@ if (user) {
     accountNumber.textContent =
       user.accountNumber;
   }
+
+  if (userVerification && user.verified === true) {
+    userVerification.classList.remove("hidden");
+  }
+
+  document.querySelectorAll("[data-profile-avatar]").forEach(function (avatar) {
+    if (user.profileImage) avatar.src = user.profileImage;
+  });
 
 }
 
@@ -365,6 +375,9 @@ if (accountsContainer) {
       "beforeend",
       accountHTML
     );
+    const accountCard = accountsContainer.lastElementChild;
+    accountCard.dataset.dashboardSearchItem = "account";
+    accountCard.dataset.searchText = account.name;
 
   });
 
@@ -647,8 +660,135 @@ if (transactionsContainer) {
         "beforeend",
         transactionHTML
       );
+      const transactionRow = transactionsContainer.lastElementChild;
+      transactionRow.dataset.dashboardSearchItem = "transaction";
+      transactionRow.dataset.searchText = `${transaction.name} ${transaction.bank || ""}`;
 
     }
   );
 
+}
+
+// ========================================
+// DASHBOARD SEARCH
+// ========================================
+
+const dashboardSearch = document.getElementById("dashboard-search");
+const accountsEmptyState = document.getElementById("accounts-empty-state");
+const transactionsEmptyState = document.getElementById("transactions-empty-state");
+
+if (dashboardSearch) {
+  dashboardSearch.addEventListener("input", function () {
+    const query = dashboardSearch.value.trim().toLowerCase();
+    const accountItems = document.querySelectorAll('[data-dashboard-search-item="account"]');
+    const transactionItems = document.querySelectorAll('[data-dashboard-search-item="transaction"]');
+
+    function filterItems(items, emptyState) {
+      let visibleCount = 0;
+      items.forEach(function (item) {
+        const matches = item.dataset.searchText.toLowerCase().includes(query);
+        item.classList.toggle("hidden", !matches);
+        if (matches) visibleCount += 1;
+      });
+      if (emptyState) emptyState.classList.toggle("hidden", visibleCount > 0);
+    }
+
+    filterItems(accountItems, accountsEmptyState);
+    filterItems(transactionItems, transactionsEmptyState);
+  });
+}
+
+// ========================================
+// NOTIFICATIONS
+// ========================================
+
+const notificationButton = document.getElementById("notification-button");
+const notificationPanel = document.getElementById("notification-panel");
+const notificationList = document.getElementById("notification-list");
+const notificationIndicator = document.getElementById("notification-indicator");
+const notificationReadKey = "reenReadNotifications";
+let readNotificationIds = [];
+
+try {
+  const savedReadIds = JSON.parse(localStorage.getItem(notificationReadKey) || "[]");
+  if (Array.isArray(savedReadIds)) readNotificationIds = savedReadIds.map(String);
+} catch (error) {
+  readNotificationIds = [];
+}
+
+function renderNotifications() {
+  if (!notificationList) return;
+  notificationList.replaceChildren();
+
+  if (transactions.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "py-3 text-sm text-gray-500";
+    emptyMessage.textContent = "No recent activity yet.";
+    notificationList.append(emptyMessage);
+    return;
+  }
+
+  transactions.forEach(function (transaction) {
+    const link = document.createElement("a");
+    link.href = "transaction.html";
+    link.className = "block rounded-lg px-3 py-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-reen-green";
+
+    const title = document.createElement("span");
+    title.className = "block truncate text-sm font-medium text-gray-800";
+    title.textContent = transaction.name || "Account activity";
+
+    const detail = document.createElement("span");
+    detail.className = "mt-1 block text-xs text-gray-500";
+    const sign = Number(transaction.amount) >= 0 ? "+" : "-";
+    detail.textContent = `${sign} ${formatMoney(Math.abs(Number(transaction.amount) || 0))} · ${transaction.date || ""} ${transaction.time || ""}`;
+
+    link.append(title, detail);
+    notificationList.append(link);
+  });
+}
+
+function updateNotificationIndicator() {
+  if (!notificationIndicator) return;
+  const hasUnread = transactions.some(function (transaction) {
+    return !readNotificationIds.includes(String(transaction.id));
+  });
+  notificationIndicator.classList.toggle("hidden", !hasUnread);
+}
+
+function closeNotificationPanel() {
+  if (!notificationPanel || !notificationButton) return;
+  notificationPanel.classList.add("hidden");
+  notificationButton.setAttribute("aria-expanded", "false");
+}
+
+if (notificationButton && notificationPanel) {
+  renderNotifications();
+  updateNotificationIndicator();
+
+  notificationButton.addEventListener("click", function () {
+    const isOpen = !notificationPanel.classList.contains("hidden");
+    if (isOpen) {
+      closeNotificationPanel();
+      return;
+    }
+
+    notificationPanel.classList.remove("hidden");
+    notificationButton.setAttribute("aria-expanded", "true");
+    readNotificationIds = Array.from(new Set([
+      ...readNotificationIds,
+      ...transactions.map(transaction => String(transaction.id))
+    ]));
+    localStorage.setItem(notificationReadKey, JSON.stringify(readNotificationIds));
+    updateNotificationIndicator();
+  });
+
+  document.addEventListener("click", function (event) {
+    if (!notificationPanel.contains(event.target) && !notificationButton.contains(event.target)) {
+      closeNotificationPanel();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeNotificationPanel();
+  });
 }
