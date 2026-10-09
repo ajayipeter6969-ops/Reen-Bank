@@ -425,8 +425,39 @@
           <span class="text-gray-500">₦</span>
           <input id="account-action-amount" name="amount" type="number" min="0.01" step="0.01" required class="w-full border-0 px-2 py-3 outline-none focus:ring-0" inputmode="decimal">
         </div>
-        <label id="account-action-bank-label" for="account-action-bank" class="mt-4 block text-sm font-medium text-gray-700">Bank</label>
-        <input id="account-action-bank" name="bank" type="text" list="nigerian-banks" autocomplete="organization" required class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light" placeholder="Choose or type a bank">
+        <fieldset id="fund-payment-methods" class="mt-4">
+          <legend class="block text-sm font-medium text-gray-700">Payment method</legend>
+          <div class="mt-2 grid grid-cols-2 gap-3">
+            <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-3 text-sm text-gray-700">
+              <input type="radio" name="payment-method" value="credit" required class="accent-reen-green">
+              <span>Credit Pay</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-3 text-sm text-gray-700">
+              <input type="radio" name="payment-method" value="direct" required checked class="accent-reen-green">
+              <span>Direct Pay</span>
+            </label>
+          </div>
+        </fieldset>
+        <div id="account-action-bank-field" class="mt-4">
+          <label id="account-action-bank-label" for="account-action-bank" class="block text-sm font-medium text-gray-700">Bank you are funding from</label>
+          <input id="account-action-bank" name="bank" type="text" list="nigerian-banks" autocomplete="organization" required class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light" placeholder="Choose or type a bank">
+        </div>
+        <div id="credit-payment-fields" class="mt-4 hidden space-y-4">
+          <div>
+            <label for="credit-card-number" class="block text-sm font-medium text-gray-700">Card number</label>
+            <input id="credit-card-number" name="cardNumber" type="text" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="credit-card-cvv" class="block text-sm font-medium text-gray-700">CVV</label>
+              <input id="credit-card-cvv" name="cardCvv" type="password" inputmode="numeric" maxlength="4" placeholder="123" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light">
+            </div>
+            <div>
+              <label for="credit-card-expiry" class="block text-sm font-medium text-gray-700">Expiry year</label>
+              <input id="credit-card-expiry" name="cardExpiry" type="text" inputmode="numeric" maxlength="4" placeholder="2029" class="mt-2 w-full rounded-lg border border-gray-200 px-3 py-3 outline-none focus:ring-2 focus:ring-reen-light">
+            </div>
+          </div>
+        </div>
         <datalist id="nigerian-banks">
           <option value="Access Bank"></option>
           <option value="Citibank Nigeria"></option>

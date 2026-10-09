@@ -88,10 +88,38 @@ const accountActionModal = document.getElementById("account-action-modal");
 const accountActionForm = document.getElementById("account-action-form");
 const accountActionAmount = document.getElementById("account-action-amount");
 const accountActionBank = document.getElementById("account-action-bank");
+const accountActionBankField = document.getElementById("account-action-bank-field");
+const creditPaymentFields = document.getElementById("credit-payment-fields");
+const creditCardNumber = document.getElementById("credit-card-number");
+const creditCardCvv = document.getElementById("credit-card-cvv");
+const creditCardExpiry = document.getElementById("credit-card-expiry");
+const fundPaymentMethods = document.getElementById("fund-payment-methods");
 const accountActionError = document.getElementById("account-action-error");
 let selectedAccountId = null;
 let selectedAction = null;
 let lastActionTrigger = null;
+
+function updateFundingMethodFields() {
+  const selectedMethod = accountActionForm.querySelector(
+    'input[name="payment-method"]:checked'
+  )?.value;
+  const isFunding = selectedAction === "fund";
+  const isCreditPay = isFunding && selectedMethod === "credit";
+
+  fundPaymentMethods.hidden = !isFunding;
+  fundPaymentMethods.disabled = !isFunding;
+  accountActionBankField.hidden = isCreditPay;
+  accountActionBank.required = !isCreditPay;
+  creditPaymentFields.classList.toggle("hidden", !isCreditPay);
+  if (!isCreditPay) {
+    creditCardNumber.value = "";
+    creditCardCvv.value = "";
+    creditCardExpiry.value = "";
+  }
+  if (!isFunding) {
+    creditPaymentFields.classList.add("hidden");
+  }
+}
 
 function openAccountAction(accountId, action, trigger) {
   const account = getAccountById(accountId);
@@ -102,6 +130,7 @@ function openAccountAction(accountId, action, trigger) {
   lastActionTrigger = trigger;
   accountActionForm.reset();
   accountActionError.textContent = "";
+  updateFundingMethodFields();
   document.getElementById("account-action-title").textContent =
     action === "fund" ? "Fund account" : "Withdraw from account";
   document.getElementById("account-action-bank-label").textContent =
@@ -133,20 +162,45 @@ accountGrid.addEventListener("click", function (event) {
   openAccountAction(accountId, button.dataset.action, button);
 });
 
+fundPaymentMethods.addEventListener("change", updateFundingMethodFields);
+
 accountActionForm.addEventListener("submit", function (event) {
   event.preventDefault();
   const account = getAccountById(selectedAccountId);
   const amount = Number(accountActionAmount.value);
   const bank = accountActionBank.value.trim();
+  const paymentMethod = accountActionForm.querySelector(
+    'input[name="payment-method"]:checked'
+  )?.value;
+  const cardNumber = creditCardNumber.value.trim().replace(/\s+/g, "");
+  const cardCvv = creditCardCvv.value.trim();
+  const cardExpiry = creditCardExpiry.value.trim();
 
   if (!account || !Number.isFinite(amount) || amount <= 0) {
     accountActionError.textContent = "Enter an amount greater than zero.";
     return;
   }
-  if (!bank) {
+  if ((selectedAction === "withdraw" || paymentMethod === "direct") && !bank) {
     accountActionError.textContent = "Choose or enter a bank.";
     accountActionBank.focus();
     return;
+  }
+  if (selectedAction === "fund" && paymentMethod === "credit") {
+    if (!/^[0-9]{15,19}$/.test(cardNumber)) {
+      accountActionError.textContent = "Enter a valid card number.";
+      creditCardNumber.focus();
+      return;
+    }
+    if (!/^[0-9]{3,4}$/.test(cardCvv)) {
+      accountActionError.textContent = "Enter a valid CVV.";
+      creditCardCvv.focus();
+      return;
+    }
+    if (!/^[0-9]{4}$/.test(cardExpiry)) {
+      accountActionError.textContent = "Enter a valid expiry year.";
+      creditCardExpiry.focus();
+      return;
+    }
   }
   if (selectedAction === "withdraw" && amount > Number(account.balance)) {
     accountActionError.textContent = "The withdrawal exceeds this account's balance.";
@@ -163,10 +217,13 @@ accountActionForm.addEventListener("submit", function (event) {
   }
 
   const now = new Date();
+  const paymentSource = selectedAction === "fund" && paymentMethod === "credit"
+    ? `Credit Pay • ${cardNumber.slice(-4)}`
+    : bank;
   addTransaction({
-    name: `${account.name} - ${bank}`,
+    name: `${account.name} - ${paymentSource}`,
     amount: signedAmount,
-    bank: bank,
+    bank: paymentSource,
     date: now.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
     time: now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
   });
@@ -221,4 +278,3 @@ document.getElementById("cancel-add-account").addEventListener("click", closeAdd
 addAccountModal.addEventListener("click", function (event) {
   if (event.target === addAccountModal) closeAddAccount();
 });
-
